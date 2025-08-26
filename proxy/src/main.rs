@@ -36,6 +36,7 @@ pub mod forwarder;
 mod heartbeat;
 mod server;
 mod token_authenticator;
+mod unix_server;
 
 #[derive(Clone, Debug, Parser)]
 #[clap(author, version, about, long_about = None)]
@@ -317,6 +318,15 @@ fn main() -> Result<(), ShredstreamProxyError> {
             exit.clone(),
         );
         thread_handles.push(refresh_handle);
+    }
+
+    {
+        let unix_server_hdl = unix_server::start_unix_server_thread(
+            entry_sender.clone(),
+            exit.clone(),
+            shutdown_receiver.clone(),
+        );
+        thread_handles.push(unix_server_hdl);
     }
 
     if let Some(port) = args.grpc_service_port {
