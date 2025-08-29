@@ -24,6 +24,7 @@ use solana_client::client_error::{reqwest, ClientError};
 use solana_ledger::shred::Shred;
 use solana_metrics::set_host_id;
 use solana_perf::deduper::Deduper;
+use solana_sdk::signer::Signer;
 use solana_sdk::{clock::Slot, signature::read_keypair_file};
 use solana_streamer::streamer::StreamerReceiveStats;
 use thiserror::Error;
@@ -375,7 +376,7 @@ fn start_heartbeat(
             )
         }),
     );
-
+    println!("start_heartbeat pubkey:{}", auth_keypair.pubkey());
     heartbeat::heartbeat_loop_thread(
         args.block_engine_url.clone(),
         args.auth_url.unwrap_or(args.block_engine_url),
